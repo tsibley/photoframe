@@ -1,0 +1,14 @@
+SHELL=/bin/bash
+
+# Intended to be run in the US/Pacific time zone
+photoframe=~/photoframe
+zap=/dev/tcp/zap/11235
+
+# On weekdays, show the current meteogram on the hour and at half past starting
+# at 6 and ending at 7:30.  On weekends, last update is at 8:30.
+00,30 06-07 * * 1-5 tom $photoframe/meteogram >$zap
+00,30 06-08 * * 6-7 tom $photoframe/meteogram >$zap
+
+# On weekdays, blank the display at 8.  On weekends, wait till 9.
+00    08    * * 1-5 tom cat $photoframe/blank.ppm >$zap
+00    09    * * 6-7 tom cat $photoframe/blank.ppm >$zap
