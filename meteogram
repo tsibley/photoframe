@@ -1,7 +1,11 @@
 #!/bin/bash
 set -euo pipefail
 
+ident="photoframe/$(basename "$0")"
+
 meteogram="https://forecast.weather.gov/meteograms/Plotter.php?lat=47.6815&lon=-122.382&wfo=SEW&zcode=WAZ558&gset=20&gdiff=3&unit=0&tinfo=PY8&ahour=0&pcmd=11101111110000000000000000000000000000000000000000000000000&lg=en&indu=1!1!1!&dd=&bw=&hrspan=48&pqpfhr=6&psnwhr=6"
+
+logger -t "$ident" "Fetching current meteogram"
 
 # Enlargen the image, which is otherwise too small to read easily.
 curl -fsSL "$meteogram" | convert - -scale '1920x1080' png:-
