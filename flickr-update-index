@@ -1,0 +1,53 @@
+#!/bin/bash
+set -euo pipefail
+
+photoframe="$(dirname $0)"
+data="$photoframe/data/flickr"
+
+main() {
+    fetch
+    fixup
+    extract
+}
+
+# Fetch new RDF XML files from my Flickr backup on cue.
+fetch() {
+    rsync \
+        --verbose \
+        --update \
+        --recursive \
+        --include='*.xml' \
+        --include='*/' \
+        --exclude='*' \
+        --times \
+        --omit-dir-times \
+        --human-readable \
+        --compress \
+        cue:/net/backup/tom/flickr/ \
+        "$data"/
+}
+
+# Correct missing entity encoding of ampersands in attribute values
+fixup() {
+    find-rdf-xml \
+  | xargs -0 perl -pi -e 's/&(?!amp;|#)/&amp;/g'
+}
+
+# Process RDF XML into a simple CSV
+extract() {
+    echo "photo,created,jpg" > "$data"/photos.csv
+
+    find-rdf-xml \
+  | parallel -0 -j10 --group --joblog "$data"/extract.log \
+          roqet --quiet update-flickr-index.rq --data {} --results csv \
+      '|' tail -n +2 \
+ >> "$data"/photos.csv
+
+    dos2unix "$data/photos.csv"
+}
+
+find-rdf-xml() {
+    find "$data" -iname '*.xml' -print0
+}
+
+main "$@"

@@ -1,0 +1,17 @@
+prefix dc: <http://purl.org/dc/elements/1.1/>
+prefix dcterms: <http://purl.org/dc/terms/>
+prefix acl: <http://www.w3.org/2001/02/acls#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+select ?photo ?created ?jpg
+
+where {
+    # XXX TODO: Eventually use friends/family/private too, but this requires
+    # authenticated URLs.
+    ?photo a <x-urn:flickr:photo>.
+    ?photo acl:accessor "public".
+    ?photo dc:created ?created.
+
+    ?jpg rdfs:seeAlso ?photo.
+    ?jpg dcterms:relation "Original".
+}
