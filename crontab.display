@@ -1,0 +1,3 @@
+# Turn off the display at midnight and back on again at 5am
+00 00 * * * root vcgencmd display_power 0
+00 05 * * * root vcgencmd display_power 1
