@@ -1,0 +1,10 @@
+#!/bin/bash
+#
+# Pre-scaling to the display size helps little zap out a lot.  It's good to
+# help friends out, and the photo gets to the display faster.
+#
+# Auto-orienting the photo is important for scaling the correct dimension.
+#
+set -euo pipefail
+
+exec convert - -scale '1920x1080>' -auto-orient png:-

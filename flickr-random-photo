@@ -1,0 +1,33 @@
+#!/bin/bash
+set -euo pipefail
+
+photoframe="$(dirname $0)"
+ident="photoframe/$(basename $0)"
+photos="$photoframe/data/flickr/photos.csv"
+
+main() {
+    if [[ ! -e $photos ]]; then
+        echo "Flickr photo index does not exist at: $photos" >&2
+        echo "Did you run update-flickr-index?" >&2
+        exit 1
+    fi
+
+    pick | log | fetch | "$photoframe/prepare"
+}
+
+pick() {
+    < "$photos" \
+      cut -d, -f3 \
+    | tail -n+2 \
+    | shuf -n1
+}
+
+log() {
+    tee >(logger -t "$ident" "Picked $(</dev/stdin)")
+}
+
+fetch() {
+    xargs curl -fsSL
+}
+
+main "$@"
