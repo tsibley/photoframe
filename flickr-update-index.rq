@@ -17,12 +17,12 @@ where {
     ?jpg rdfs:seeAlso ?photo ;
         dcterms:relation "Original" .
 
+    # Filter out photos of an old girlfriend (tagged lauren, in 2007)
     filter not exists {
         ?photo dc:subject [ a <x-urn:flickr:tag>; skos:prefLabel "lauren" ] .
 
-        # Being inside a not exists filter makes this a little funky double negative.
         bind (xsd:integer(strbefore(?created, "-")) as ?createdYear)
-        filter (?createdYear <= 2006 || 2007 < ?createdYear) .
+        filter (?createdYear = 2007)
     }
 }
 
