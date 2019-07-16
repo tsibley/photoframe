@@ -1,0 +1,78 @@
+#!/bin/bash
+set -euo pipefail
+
+: "${JENA_HOME:=/opt/jena}"
+export JENA_HOME
+
+photoframe="$(dirname "$0")"
+data="$photoframe/data/flickr"
+
+main() {
+    if [[ $# -gt 0 ]]; then
+        local cmd="$1"
+        shift
+        "$cmd" "$@"
+    else
+        fetch
+        fixup
+        graph
+        index
+    fi
+}
+
+# Fetch new RDF XML files from my Flickr backup on cue.
+fetch() {
+    rsync \
+        --verbose \
+        --update \
+        --recursive \
+        --include='*.xml' \
+        --include='*/' \
+        --exclude='*' \
+        --times \
+        --omit-dir-times \
+        --human-readable \
+        --compress \
+        cue:/net/backup/tom/flickr/ \
+        "$data"/
+}
+
+# Correct missing entity encoding of ampersands in attribute values and
+# mis-used rdf:resource attributes.  This is pretty horrendous!
+fixup() {
+    find-rdf-xml \
+  | xargs -0 perl -pi -e '
+        s/&(?!amp;|#)/&amp;/g;
+
+        s{<(dc:title|a:body|exif:CreateDate|exif:DateTimeOriginal) \s+ rdf:resource="([^"]+)" \s* />}
+         {<$1>$2</$1>}x;
+    '
+}
+
+# Parse all RDF XML into a single Jena TDB graph store
+graph() {
+    rm -rfv "$data/graph"
+
+    find-rdf-xml \
+  | xargs -0 -P1 \
+      "$JENA_HOME"/bin/tdbloader --loc "$data/graph"
+}
+
+# Query the graph to build the index of photos we want to display
+index() {
+    "$JENA_HOME"/bin/tdbquery \
+        --loc "$data/graph" \
+        --query "${BASH_SOURCE}-index.rq" \
+        --results csv \
+  > "$data"/photos.csv
+
+    dos2unix "$data/photos.csv"
+}
+
+find-rdf-xml() {
+    find "$data" -iname '*.xml' -not -empty -print0
+}
+
+if [[ $0 == $BASH_SOURCE ]]; then
+    main "$@"
+fi

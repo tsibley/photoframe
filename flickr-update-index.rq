@@ -8,10 +8,14 @@ select ?photo ?created ?jpg
 where {
     # XXX TODO: Eventually use friends/family/private too, but this requires
     # authenticated URLs.
-    ?photo a <x-urn:flickr:photo>.
-    ?photo acl:accessor "public".
-    ?photo dc:created ?created.
+    ?photo a <x-urn:flickr:photo> ;
+        acl:accessor "public" ;
+        dc:created ?created .
 
-    ?jpg rdfs:seeAlso ?photo.
-    ?jpg dcterms:relation "Original".
+    ?jpg rdfs:seeAlso ?photo ;
+        dcterms:relation "Original" .
 }
+
+order by ?created ?photo
+
+# vim: set syn=sparql:
