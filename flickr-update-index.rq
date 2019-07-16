@@ -14,6 +14,14 @@ where {
 
     ?jpg rdfs:seeAlso ?photo ;
         dcterms:relation "Original" .
+
+    filter not exists {
+        ?photo dc:subject <http://www.flickr.com/photos/35468142996@N01/tags/lauren> .
+
+        # XXX FIXME: This will also pick up other Laurens.  Do a date
+        # restriction like, but with syntax that actually works:
+        #filter (2006 <= year(?created) && year(?created) <= 2007) .
+    }
 }
 
 order by ?created ?photo
