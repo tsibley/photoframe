@@ -2,6 +2,8 @@ prefix dc: <http://purl.org/dc/elements/1.1/>
 prefix dcterms: <http://purl.org/dc/terms/>
 prefix acl: <http://www.w3.org/2001/02/acls#>
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
 
 select ?photo ?created ?jpg
 
@@ -16,11 +18,11 @@ where {
         dcterms:relation "Original" .
 
     filter not exists {
-        ?photo dc:subject <http://www.flickr.com/photos/35468142996@N01/tags/lauren> .
+        ?photo dc:subject [ a <x-urn:flickr:tag>; skos:prefLabel "lauren" ] .
 
-        # XXX FIXME: This will also pick up other Laurens.  Do a date
-        # restriction like, but with syntax that actually works:
-        #filter (2006 <= year(?created) && year(?created) <= 2007) .
+        # Being inside a not exists filter makes this a little funky double negative.
+        bind (xsd:integer(strbefore(?created, "-")) as ?createdYear)
+        filter (?createdYear <= 2006 || 2007 < ?createdYear) .
     }
 }
 
