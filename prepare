@@ -7,4 +7,4 @@
 #
 set -euo pipefail
 
-exec convert - -scale '1920x1080>' -auto-orient png:-
+exec convert - -scale 1920x1080 -auto-orient png:-
