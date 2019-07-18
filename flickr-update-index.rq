@@ -5,25 +5,48 @@ prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 prefix skos: <http://www.w3.org/2004/02/skos/core#>
 prefix xsd: <http://www.w3.org/2001/XMLSchema#>
 
-select ?photo ?created ?jpg
+select distinct ?photo ?created ?jpg
 
 where {
-    # XXX TODO: Eventually use friends/family/private too, but this requires
-    # authenticated URLs.
-    ?photo a <x-urn:flickr:photo> ;
-        acl:accessor "public" ;
-        dc:created ?created .
+    {
+        # Public and family-visible photos
+        ?photo a <x-urn:flickr:photo> ;
+            acl:accessor ?visibility ;
+            dc:created ?created .
+
+        filter (?visibility in ("public", "family"))
+
+        # Filter out photos of an old girlfriend (tagged lauren, in 2007)
+        filter not exists {
+            ?photo dc:subject [ a <x-urn:flickr:tag>; skos:prefLabel "lauren" ] .
+
+            bind (xsd:integer(strbefore(?created, "-")) as ?createdYear)
+            filter (?createdYear = 2007)
+        }
+    } union {
+        # Private photos
+        ?photo a <x-urn:flickr:photo> ;
+            acl:accessor "private" ;
+            dc:created ?created .
+
+        # Filter to private photos with specifically allowed tags
+        filter exists {
+            ?photo dc:subject [ a <x-urn:flickr:tag>; skos:prefLabel ?tag ] .
+
+            filter (
+                ?tag in
+                    ("theo"             # ♥
+                    ,"90th"             # Savta's (Amy's) 90th birthday party
+                    ,"samantha"         # Samantha at holidays long ago and in Seattle years ago
+                    ,"elizabethtown"    # Samantha's graduation
+                    ,"polaroid"         # Scanned polaroids
+                    )
+            )
+        }
+    }
 
     ?jpg rdfs:seeAlso ?photo ;
         dcterms:relation "Original" .
-
-    # Filter out photos of an old girlfriend (tagged lauren, in 2007)
-    filter not exists {
-        ?photo dc:subject [ a <x-urn:flickr:tag>; skos:prefLabel "lauren" ] .
-
-        bind (xsd:integer(strbefore(?created, "-")) as ?createdYear)
-        filter (?createdYear = 2007)
-    }
 }
 
 order by ?created ?photo
