@@ -23,6 +23,16 @@ where {
             bind (xsd:integer(strbefore(?created, "-")) as ?createdYear)
             filter (?createdYear = 2007)
         }
+
+        # Filter out photos with certain tags
+        filter not exists {
+            ?photo dc:subject [ a <x-urn:flickr:tag>; skos:prefLabel ?tag ] .
+            filter (
+                ?tag in
+                    ("publicaffairs"    # Bad, boring shots for the public affairs office in college
+                    )
+            )
+        }
     } union {
         # Private photos
         ?photo a <x-urn:flickr:photo> ;
