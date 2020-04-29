@@ -8,7 +8,7 @@ photos="$photoframe/data/flickr/photos.csv"
 main() {
     if [[ ! -e $photos ]]; then
         echo "Flickr photo index does not exist at: $photos" >&2
-        echo "Did you run flickr-update?" >&2
+        echo "Did you run flickr-graph?" >&2
         exit 1
     fi
 

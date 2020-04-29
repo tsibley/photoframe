@@ -15,7 +15,7 @@ main() {
     else
         fetch
         fixup
-        graph
+        load
         index
     fi
 }
@@ -50,7 +50,7 @@ fixup() {
 }
 
 # Parse all RDF XML into a single Jena TDB graph store
-graph() {
+load() {
     rm -rfv "$data/graph"
 
     find-rdf-xml \
@@ -67,6 +67,24 @@ index() {
   > "$data"/photos.csv
 
     dos2unix "$data/photos.csv"
+}
+
+# Ad-hoc queries
+query() {
+    local query="${1:?A query file or string is required.}"
+
+    if [[ -e "$query" ]]; then
+        _query --query "$query"
+    else
+        _query "$query"
+    fi
+}
+
+_query() {
+    "$JENA_HOME"/bin/tdbquery \
+        --loc "$data/graph" \
+        --results csv \
+        "$@"
 }
 
 find-rdf-xml() {
