@@ -30,6 +30,7 @@ where {
             filter (
                 ?tag in
                     ("publicaffairs"    # Bad, boring shots for the public affairs office in college
+                    ,"blood"            # High school me had some silly noir tendencies.
                     )
             )
         }
