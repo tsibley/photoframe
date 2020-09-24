@@ -9,12 +9,12 @@ select distinct ?photo ?created ?jpg
 
 where {
     {
-        # Public and family-visible photos
+        # Public and family/friend-visible photos
         ?photo a <x-urn:flickr:photo> ;
             acl:accessor ?visibility ;
             dc:created ?created .
 
-        filter (?visibility in ("public", "family"))
+        filter (?visibility in ("public", "family", "friend", "family;friend"))
 
         # Filter out photos of an old girlfriend (tagged lauren, in 2007)
         filter not exists {
