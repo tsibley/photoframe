@@ -74,9 +74,9 @@ query() {
     local query="${1:?A query file or string is required.}"
 
     if [[ -e "$query" ]]; then
-        _query --query "$query"
+        _query --query "$query" | _view
     else
-        _query "$query"
+        _query "$query" | _view
     fi
 }
 
@@ -85,6 +85,14 @@ _query() {
         --loc "$data/graph" \
         --results csv \
         "$@"
+}
+
+_view() {
+    if [[ -t 1 ]] && type vd &>/dev/null; then
+        exec vd -f csv
+    else
+        exec cat
+    fi
 }
 
 find-rdf-xml() {
