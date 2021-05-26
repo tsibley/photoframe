@@ -44,7 +44,7 @@ fixup() {
   | xargs -0 perl -pi -e '
         s/&(?!amp;|#)/&amp;/g;
 
-        s{<(dc:title|a:body|exif:CreateDate|exif:DateTimeOriginal) \s+ rdf:resource="([^"]+)" \s* />}
+        s{<(dc:title|a:body|exif:CreateDate|exif:DateTimeOriginal|exif:UserComment) \s+ rdf:resource="([^"]+)" \s* />}
          {<$1>$2</$1>}x;
     '
 }
