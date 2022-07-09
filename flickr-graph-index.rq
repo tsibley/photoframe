@@ -60,6 +60,11 @@ where {
     filter (
         ?photo not in
             (<http://www.flickr.com/photos/35468142996@N01/445344138>
+            ,<https://www.flickr.com/photos/35468142996@N01/34442529213>
+            ,<https://www.flickr.com/photos/35468142996@N01/35121676171>
+            ,<https://www.flickr.com/photos/35468142996@N01/35121674771>
+            ,<https://www.flickr.com/photos/35468142996@N01/35121665371>
+            ,<https://www.flickr.com/photos/35468142996@N01/35121651681>
             )
     )
 
