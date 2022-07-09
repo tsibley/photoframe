@@ -34,13 +34,6 @@ where {
                     )
             )
         }
-
-        # Filter out specific photos which don't get caught by tags
-        filter (
-            ?photo not in
-                (<http://www.flickr.com/photos/35468142996@N01/445344138>
-                )
-        )
     } union {
         # Private photos
         ?photo a <x-urn:flickr:photo> ;
@@ -62,6 +55,13 @@ where {
             )
         }
     }
+
+    # Filter out specific photos which don't get caught by tags
+    filter (
+        ?photo not in
+            (<http://www.flickr.com/photos/35468142996@N01/445344138>
+            )
+    )
 
     ?jpg rdfs:seeAlso ?photo ;
         dcterms:relation "Original" .
