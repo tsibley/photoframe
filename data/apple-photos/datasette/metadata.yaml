@@ -1,0 +1,31 @@
+databases:
+  photos:
+    title: Apple Photos
+    description_html: |
+      <p>Data from my Apple (iCloud) Photos library
+    tables:
+      favorites:
+        sort_desc: date
+        size: 20
+    queries:
+      favorites-urls:
+        sql: |
+          select
+            'http://' || :_header_host || url as url
+          from
+            favorites
+          order by
+            date desc
+
+plugins:
+  datasette-media:
+    favorites:
+      database: photos
+      sql: |
+        select
+          path_preferred as filepath
+        from
+          favorites
+        where
+          uuid = :key
+      enable_transform: true

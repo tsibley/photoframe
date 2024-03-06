@@ -1,0 +1,13 @@
+diff --git a/datasette_media/utils.py b/datasette_media/utils.py
+index 170da12..8184d6e 100644
+--- a/datasette_media/utils.py
++++ b/datasette_media/utils.py
+@@ -60,7 +60,7 @@ def transform_image(image_bytes, width=None, height=None, format=None):
+     image_type = image_type_for_bytes(image_bytes)
+     if image_type == "heic" and pyheif is not None:
+         heic = pyheif.read_heif(image_bytes)
+-        image = Image.frombytes(mode=heic.mode, size=heic.size, data=heic.data)
++        image = Image.frombytes(heic.mode, heic.size, heic.data, "raw", heic.mode, heic.stride)
+     else:
+         image = Image.open(io.BytesIO(image_bytes))
+     # Does EXIF tell us to rotate it?
