@@ -8,4 +8,4 @@ zap=/dev/tcp/zap/11235
 00,30  06-07  *  *  *  pi  ~/photoframe/meteogram >$zap
 
 # Show photos early in the morning and then after the weather.
-*/6  05-06,08-23  *  *  *  pi  ~/photoframe/flickr-random-photo >$zap
+*/6  05-06,08-23  *  *  *  pi  ~/photoframe/random-photo >$zap
