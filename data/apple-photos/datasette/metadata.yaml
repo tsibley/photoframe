@@ -6,7 +6,6 @@ databases:
     tables:
       favorites:
         sort_desc: date
-        size: 20
     queries:
       favorites-urls:
         sql: |
