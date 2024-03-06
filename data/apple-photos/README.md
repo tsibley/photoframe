@@ -73,7 +73,9 @@ at least it works.
 
     brew tap --force homebrew-core
     git -C "$(brew --prefix)/Library/Taps/homebrew/homebrew-core" checkout aa976f78584cce32febca44fd4a8c275d4e9318c -- Formula/lib/libheif.rb
-    HOMEBREW_NO_INSTALL_FROM_API=1 brew install libheif
+    HOMEBREW_NO_INSTALL_FROM_API=1 HOMEBREW_NO_AUTO_UPDATE=1 brew install libheif
+    brew pin libheif
+    brew untap homebrew/core
 
     brew install libffi
     pipx inject datasette 'pyheif @ git+https://github.com/carsales/pyheif.git@2eaefe983acc01d52ca6b0094d986739cd7b32a5'
