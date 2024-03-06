@@ -1,0 +1,5 @@
+SHELL=/bin/bash
+PATH=/opt/homebrew/bin:/Users/tom/bin:/Users/tom/.local/bin:/usr/local/bin:/usr/bin:/bin
+
+# Refresh Apple Photos favorites data every so often
+*/8 * * * * cd ~/photoframe/data/apple-photos/ && redo

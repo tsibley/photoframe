@@ -14,7 +14,7 @@ uninstall:
 
 
 #
-# …and for displaying device.
+# …and for displaying device…
 #
 
 display-install: /etc/cron.d/photoframe-display
@@ -24,3 +24,16 @@ display-uninstall:
 
 /etc/cron.d/photoframe-display: crontab.display
 	install -vm u=rw,go=r $< $@
+
+
+#
+# …and for the Apple device.
+#
+
+apple-photos-install: crontab.apple-photos
+	# XXX FIXME: check for existing crontab first
+	crontab $<
+
+apple-photos-uninstall:
+	# XXX FIXME: check that we're removing just our crontab first
+	crontab -r

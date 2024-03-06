@@ -1,0 +1,54 @@
+#!/bin/bash
+set -euo pipefail
+
+photoframe="$(dirname $0)"
+ident="photoframe/$(basename $0)"
+
+main() {
+    case "${1:-}" in
+        flickr-photos|apple-photos|pick)
+            "$1";;
+        fetch)
+            pick | fetch;;
+        *)
+            pick | log | fetch | "$photoframe/prepare";;
+    esac
+}
+
+flickr-photos() {
+    local photos="$photoframe/data/flickr/photos.csv"
+
+    if [[ ! -e $photos ]]; then
+        echo "Flickr photo index does not exist at: $photos" >&2
+        echo "Did you run flickr-graph?" >&2
+        exit 1
+    fi
+
+    < "$photos" \
+      cut -d, -f3 \
+    | tail -n+2
+}
+
+apple-photos() {
+    local photos="http://bloop.home:3000/photos/favorites-urls.csv?_stream=on&_header=off"
+
+    if ! curl -fsSL "$photos" | dos2unix; then
+        echo "Unable to access Apple Photos index at: $photos" >&2
+        echo "Is Datasette running over on the Mac?" >&2
+        exit 1
+    fi
+}
+
+pick() {
+    (flickr-photos; apple-photos) | shuf -n1
+}
+
+log() {
+    tee >(logger -t "$ident" "Picked $(</dev/stdin)")
+}
+
+fetch() {
+    xargs curl -fsSL
+}
+
+main "$@"

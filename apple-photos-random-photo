@@ -1,0 +1,25 @@
+#!/bin/bash
+set -euo pipefail
+
+photoframe="$(dirname $0)"
+ident="photoframe/$(basename $0)"
+
+main() {
+    pick | log | fetch | "$photoframe/prepare"
+}
+
+pick() {
+      curl -fsSL 'http://bloop.home:3000/photos/favorites-urls.csv?_stream=on&_header=off' \
+    | dos2unix \
+    | shuf -n1
+}
+
+log() {
+    tee >(logger -t "$ident" "Picked $(</dev/stdin)")
+}
+
+fetch() {
+    xargs curl -fsSL
+}
+
+main "$@"
