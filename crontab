@@ -5,7 +5,7 @@ zap=/dev/tcp/zap/11235
 
 # Show the current meteogram on the hour and at half past starting at 6 and
 # ending at 7:30.
-00,30  06-07  *  *  *  tom  ~/photoframe/meteogram >$zap
+00,30  06-07  *  *  *  pi  ~/photoframe/meteogram >$zap
 
 # Show photos early in the morning and then after the weather.
-*/6  05-06,08-23  *  *  *  tom  ~/photoframe/flickr-random-photo >$zap
+*/6  05-06,08-23  *  *  *  pi  ~/photoframe/flickr-random-photo >$zap
