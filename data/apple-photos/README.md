@@ -89,3 +89,19 @@ are crucial for proper decoding of some images.  Oops.  Patch it.
     patch -d "$(pipx environment -V PIPX_LOCAL_VENVS)"/datasette/lib/python3.*/site-packages/ < datasette-media-heic.patch
 
 Are we having fun yet?
+
+Install the crontab to keep the database up-to-date:
+
+    make apple-photos-install
+
+On its first run, it'll prompt to allow (or deny) Python access to the
+filesystem.  Permit it.  Now, go into Settings → Privacy & Security → Full Disk
+Access and toggle the "python3" entry to "allowed" to remember that setting.
+To add manually, click "+" and find the correct executable/entrypoint file
+somewhere in the bowels of /opt/homebrew/Frameworks/….  Use the Command+Shift+G
+shortcut to browse to /opt/homebrew in the file picker.
+
+Note also that when running `redo` or `datasette` for the first time, you'll
+need to permit various restricted actions (access to Photos, incoming
+connections) via the dialogs that appear on the graphical desktop environment.
+These seem to be remembered automatically, however.
