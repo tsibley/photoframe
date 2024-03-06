@@ -48,6 +48,8 @@ Install a bunch of tools:
 
     brew install redo
 
+    brew install moreutils
+
     brew install pipx
 
     pipx install osxphotos
