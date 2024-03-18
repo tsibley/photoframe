@@ -1,0 +1,12 @@
+#!/bin/bash
+# Serve database with Datasette.
+#
+# Note that --reload only monitors --immutable databases¹, which must be
+# specified individually by filename.  It's also supposed to monitor metadata,
+# but in practice I didn't see that happen.
+# 
+# ¹ <https://docs.datasette.io/en/stable/changelog.html#v0-37>
+#
+set -euo pipefail
+cd "$(dirname "$0")"/datasette/
+exec datasette -h 0.0.0.0 -p 3000 --reload --immutable photos.db .
