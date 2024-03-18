@@ -2,7 +2,7 @@ databases:
   photos:
     title: Apple Photos
     description_html: |
-      <p>Data from my Apple (iCloud) Photos library
+      <p>Data from my Apple (iCloud) Photos library, last updated $DATE
     tables:
       favorites:
         sort_desc: date
